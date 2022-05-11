@@ -78,6 +78,7 @@ class UserController {
   };
 
   create = (req, res) => {
+    console.log("user create");
     const postData = {
       email: req.body.email,
       fullname: req.body.fullname,

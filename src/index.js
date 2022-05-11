@@ -15,7 +15,7 @@ const io = SocServer(http);
 
 createRoutes(app, io);
 
-const PORT = process.env.PORT ? process.env.PORT : 3003;
+const PORT = process.env.PORT ? process.env.PORT : 3000;
 
 http.listen(PORT, function () {
   console.log(`Server: http://localhost:${PORT}`);

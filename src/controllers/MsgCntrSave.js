@@ -32,12 +32,11 @@ class MessageController {
   index = (req, res) => {
     const dialogId = req.query.dialog;
     const userId = req.query._id;
+    console.log(dialogId, userId)
     this.updateReadStatus(res, userId, dialogId);
 
     MessageModel.find({ dialog: dialogId })
-     // .sort({"updatedAt": -1})
       .populate(["dialog", "user", "attachments"])
-      .sort({"createdAt": -1})
       .exec(function (err, messages) {
         if (err) {
           return res.status(404).json({
@@ -47,11 +46,10 @@ class MessageController {
         }
         res.json(messages);
       });
-      this.io.emit("SERVER:UPDATE_STATUS", dialogId);
   };
 
   create = (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.body.user._id;
 
     const postData = {
       text: req.body.text,
@@ -59,9 +57,9 @@ class MessageController {
       attachments: req.body.attachments,
       user: userId,
     };
+    console.log(postData)
     const message = new MessageModel(postData);
 
-    console.log(postData);
     this.updateReadStatus(res, userId, req.body.dialog_id);
 
     message
@@ -92,9 +90,8 @@ class MessageController {
             );
 
             res.json(message);
-            //console.log(this.io.clients[message.dialog.partner]);
-            // (this.io.clients[message.dialog.partner]).emit("SERVER:NEW_MESSAGE", message);
-	    this.io.emit("SERVER:NEW_MESSAGE", message);
+
+            this.io.emit("SERVER:NEW_MESSAGE", message);
           }
         );
       })
@@ -104,8 +101,8 @@ class MessageController {
   };
 
   delete = (req, res) => {
-    const id = req.body.messageId;
-    const userId = req.body.userId;
+    const id = req.query.id;
+    const userId = req.user._id;
 
     MessageModel.findById(id, (err, message) => {
       if (err || !message) {

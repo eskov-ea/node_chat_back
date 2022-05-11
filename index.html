@@ -8,17 +8,22 @@
   </head>
   <body>
   <h1>Client page</h1>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>-->
-    <script src="/socket.io/socket.io.js"></script>
+  <button id="btn">Send</button>
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script> 
+    <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
     <script>
       window.onload = function() {
-        const socket = io("http://localhost:3003");
+        const socket = io("https://web-notifications.ru");
         console.log(socket)
         window.socket = socket;
         socket.on("SERVER:NEW_MESSAGE", function(msg) {
           if (window.user !== msg.user) {
             console.log(msg);
           }
+        });
+	socket.on("SERVER:UPDATE_STATUS", function(dialogId) {
+          console.log(dialogId);
         });
       };
     </script>

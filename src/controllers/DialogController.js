@@ -1,6 +1,5 @@
 import express from 'express';
 import {Socket} from 'socket.io';
-
 import { DialogModel, MessageModel } from '../models/index.js';
 
 class DialogController {
@@ -10,8 +9,9 @@ class DialogController {
   }
 
   index = (req, res) => {
-    const userId = req.body.user._id;
-
+  //  const userId = req.body.user._id;
+    const userId = req.params.id;
+	console.log(req.params);
     DialogModel.find()
       .or([{ author: userId }, { partner: userId }])
       .populate(['author', 'partner'])

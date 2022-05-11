@@ -3,7 +3,6 @@ import {Server, Socket} from 'socket.io';
 
 export const SocServer = ( http) => {
   const io = new Server(http);
-  io.clients = {};
 
   io.on("connect_error", (err) => {
     console.log(`connect_error due to ${err.message}`);
@@ -11,16 +10,10 @@ export const SocServer = ( http) => {
 
   io.on('connection', function(socket) {
     console.log('Socket connection established')
-    socket.on('SIGNIN', (id) => {
-      io.clients[id] = socket;
-//console.log(io.clients);
-    });
-
     socket.on('DIALOGS:JOIN', (dialogId) => {
       socket.dialogId = dialogId;
       socket.join(dialogId);
     });
-
     socket.on('DIALOGS:TYPING', (obj) => {
       socket.broadcast.emit('DIALOGS:TYPING', obj);
     });

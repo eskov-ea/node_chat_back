@@ -19,30 +19,35 @@ const createRoutes = (app, io) => {
   app.use(bodyParser.json());
   // app.use(checkAuth);
   // app.use(updateLastSeen);
+  
+  const prefix = "/api";
+  app.get(prefix + "/", (req, res) => {
+    res.send("Hello, World! ///////");
+  });
 
-  app.get("/", (req, res) => {
+
+  app.get("/api", (req, res) => {
     res.send("Hello, World!");
   });
-  app.get("/client", (req, res) => {
-    // console.log()
-    res.sendFile('C:\\Users\\user\\WebstormProjects\\node_chat_back\\' + 'index.html');
+  app.get(prefix + "/client", (req, res) => {
+    res.sendFile('/var/www/webpushes/node_chat_back/' + 'index.html');
   });
 
-  app.get("/user/me", UserController.getMe);
+  app.get(prefix + "/user/me", UserController.getMe);
   // app.get("/user/verify", UserController.verify);
-  app.post("/user/signup", registerValidation, UserController.create);
-  app.post("/user/signin", loginValidation, UserController.login);
-  // app.get("/user/find", UserController.findUsers);
-  // app.get("/user/:id", UserController.show);
+  app.post(prefix + "/user/signup", registerValidation, UserController.create);
+  app.post(prefix + "/user/signin", loginValidation, UserController.login);
+  app.get(prefix + "/user/find", UserController.findUsers);
+  app.get(prefix + "/user/:id", UserController.show);
   // app.delete("/user/:id", UserController.delete);
   //
-  app.get("/dialogs", DialogController.index);
+  app.get(prefix + "/dialogs/:id", DialogController.index);
   // app.delete("/dialogs/:id", DialogController.delete);
-  app.post("/dialogs", DialogController.create);
+  app.post(prefix + "/dialogs", DialogController.create);
   //
-  app.get("/messages", MessageController.index);
-  app.post("/messages", MessageController.create);
-  app.delete("/messages", MessageController.delete);
+  app.get(prefix + "/messages", MessageController.index);
+  app.post(prefix + "/messages", MessageController.create);
+  app.delete(prefix + "/messages", MessageController.delete);
   //
   // app.post("/files", multer.single("file"), UploadFileController.create);
   // app.delete("/files", UploadFileController.delete);

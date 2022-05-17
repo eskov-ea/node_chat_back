@@ -42,7 +42,8 @@ const createRoutes = (app, io) => {
   // app.delete("/user/:id", UserController.delete);
   //
   app.get(prefix + "/dialogs/:id", DialogController.index);
-  // app.delete("/dialogs/:id", DialogController.delete);
+  app.post(prefix + "/dialog/find", DialogController.findDialog);
+  app.delete(prefix + "/dialogs/:id", DialogController.delete);
   app.post(prefix + "/dialogs", DialogController.create);
   //
   app.get(prefix + "/messages", MessageController.index);

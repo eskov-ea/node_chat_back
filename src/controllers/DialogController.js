@@ -9,7 +9,6 @@ class DialogController {
   }
 
   index = (req, res) => {
-  //  const userId = req.body.user._id;
     const userId = req.params.id;
 	console.log(req.params);
     DialogModel.find()
@@ -31,21 +30,41 @@ class DialogController {
       });
   };
 
+  findDialog = (req, res) => {
+    const userId = req.body.userId;
+    const partnerId = req.body.partnerId;
+    console.log(userId, partnerId);
+
+    DialogModel.find()
+      .or([{author: userId, partner: partnerId}, {author: partnerId, partner: userId}])
+      .populate(['author', 'partner'])
+      .populate({
+        path: 'lastMessage',
+        populate: {
+          path: 'user',
+        },
+      })
+      .exec(function (err, dialogs) {
+        if (err) {
+          return res.status(404).json({
+            message: 'Dialogs not found',
+          });
+        }
+        return res.json(dialogs);
+      });
+  };
+
   create = (req, res) => {
-    // const postData = {
-    //   author: req.user._id,
-    //   partner: req.body.partner,
-    // };
     const postData = {
-      author: req.body.user._id,
-      partner: req.body.partner._id,
+      author: req.body.userId,
+      partner: req.body.partnerId,
     };
     console.log(postData)
 
     DialogModel.findOne(
       {
-        author: req.body.user._id,
-        partner: req.body.partner._id,
+        author: req.body.userId,
+        partner: req.body.partnerId,
       },
       (err, dialog) => {
         if (err) {
@@ -67,7 +86,7 @@ class DialogController {
             .then((dialogObj) => {
               const message = new MessageModel({
                 text: req.body.text,
-                user: req.user._id,
+                user: req.body.userId,
                 dialog: dialogObj._id,
               });
 
@@ -100,6 +119,7 @@ class DialogController {
 
   delete = (req, res) => {
     const id = req.params.id;
+    console.log(id);
     DialogModel.findOneAndRemove({ _id: id })
       .then((dialog) => {
         if (dialog) {

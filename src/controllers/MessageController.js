@@ -53,6 +53,9 @@ class MessageController {
   create = (req, res) => {
     const userId = req.body.userId;
 
+    console.log(req.body);
+    console.log(req.file);
+
     const postData = {
       text: req.body.text,
       dialog: req.body.dialog_id,

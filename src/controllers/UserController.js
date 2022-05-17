@@ -177,6 +177,7 @@ class UserController {
           res.json({
             status: "success",
             token,
+            id: user._id
           });
         } else {
           res.status(403).json({

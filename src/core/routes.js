@@ -4,9 +4,8 @@ import {Socket} from "socket.io";
 import { dirname } from 'path';
 // import { updateLastSeen, checkAuth } from "../middlewares";
 import { loginValidation, registerValidation } from "../utils/validations/index.js";
-// import UserCtrl from "../controllers/UserController.js";
-import { DialogCtrl, UserCtrl, MessageCtrl } from "../controllers/index.js";
-// import multer from "./multer";
+import { DialogCtrl, UserCtrl, MessageCtrl, UploadFileCtrl } from "../controllers/index.js";
+import uploads from "./multer.js";
 
 
 
@@ -14,7 +13,7 @@ const createRoutes = (app, io) => {
   const UserController = new UserCtrl(io);
   const DialogController = new DialogCtrl(io);
   const MessageController = new MessageCtrl(io);
-  // const UploadFileController = new UploadFileCtrl();
+  const UploadFileController = new UploadFileCtrl();
 
   app.use(bodyParser.json());
   // app.use(checkAuth);
@@ -22,7 +21,7 @@ const createRoutes = (app, io) => {
   
   const prefix = "/api";
   app.get(prefix + "/", (req, res) => {
-    res.send("Hello, World! ///////");
+    res.send("Hello, World!");
   });
 
 
@@ -49,8 +48,8 @@ const createRoutes = (app, io) => {
   app.get(prefix + "/messages", MessageController.index);
   app.post(prefix + "/messages", MessageController.create);
   app.delete(prefix + "/messages", MessageController.delete);
-  //
-  // app.post("/files", multer.single("file"), UploadFileController.create);
+
+  app.post(prefix + "/files", uploads, UploadFileController.create);
   // app.delete("/files", UploadFileController.delete);
 };
 

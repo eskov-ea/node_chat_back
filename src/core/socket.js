@@ -9,6 +9,14 @@ export const SocServer = ( http) => {
     console.log(`connect_error due to ${err.message}`);
   });
 
+  io.on("disconnect", (reason) => {
+    if (reason === "io server disconnect") {
+      // the disconnection was initiated by the server, you need to reconnect manually
+//      socket.connect();
+    }
+    console.log(`disconneted event`);
+  });
+
   io.on('connection', function(socket) {
     console.log('Socket connection established')
     socket.on('SIGNIN', (id) => {

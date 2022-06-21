@@ -11,6 +11,9 @@ const MessageSchema = new Schema(
       default: false,
     },
     attachments: [{ type: Schema.Types.ObjectId, ref: "UploadFile" }],
+    replyedText: { type: String, require: Boolean },
+    replyedMessageId: { type: String, require: Boolean },
+    replyedPartnerName: { type: String, require: Boolean },
   },
   {
     timestamps: true,

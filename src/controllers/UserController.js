@@ -3,11 +3,13 @@ import bcrypt from "bcrypt";
 // import socket from "socket.io";
 import { validationResult } from "express-validator";
 // import mailer from "../core/mailer";
-
+import comparePassword from "../utils/comparePassword.js";
 import UserModel from "../models/User.js";
 // import { IUser } from "../models/User";
 import  createJWToken  from "../utils/createJWToken.js";
+import  verifyJWToken  from "../utils/verifyJWTToken.js";
 // import { SentMessageInfo } from "nodemailer/lib/sendmail-transport";
+
 
 class UserController {
 
@@ -28,8 +30,7 @@ class UserController {
   };
 
   getMe = (req, res) => {
-    const id = req.body && req.body._id;
-    console.log(id)
+    const id = req.params.id;
     UserModel.findById(id, (err, user) => {
       if (err || !user) {
         return res.status(404).json({
@@ -38,6 +39,34 @@ class UserController {
       }
       res.json(user);
     });
+  };
+
+  updateUser = (req, res) => {
+    const token = req.body.token;
+    const user = verifyJWToken(token);
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+    const userId = user.data._doc._id;
+    const currentPasswordHash = user.data._doc.password;
+    const hash = comparePassword(password, currentPasswordHash);
+console.log(password)
+console.log(hash);
+//    if (hash == currentPasswordHash) {
+//     console.log("password is valid"); 
+//   }
+return res.status(200).json({status: "ok", decoded: user});
+    UserModel.find()
+      .or([
+        { fullname: new RegExp(query, "i") },
+        { email: new RegExp(query, "i") },
+      ])
+      .then((users) => res.json(users))
+      .catch((err) => {
+        return res.status(404).json({
+          status: "error",
+          message: err,
+        });
+      });
   };
 
   findUsers = (req, res) => {
@@ -163,7 +192,7 @@ class UserController {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(422).json({ errors: errors.array() });
+      res.status(422).json({ errors: "Invalid login or password" });
     } else {
       UserModel.findOne({ email: postData.email }, (err, user) => {
         if (err || !user) {

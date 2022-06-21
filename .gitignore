@@ -2,3 +2,5 @@
 /backend-chat-source
 /mongo
 /.idea
+src/uploads
+tmp
